@@ -1,14 +1,20 @@
 #if compile x86 demo on unbuntu 64.
-CC:=//Users/mango/openwrt/openwrt-3.10.14/staging_dir/toolchain-mipsel_24kec+dsp_gcc-4.8-linaro_uClibc-0.9.33.2/bin/mipsel-openwrt-linux-gcc
+CC:=mipsel-openwrt-linux-gcc
 export STAGING_DIR:=/Users/mango/openwrt/openwrt-3.10.14/staging_dir
 
+SRCS=$(wildcard *.c)
+OBJS:=$(SRCS:%.c=%.o)
 
-all: app0
+all: oled
 	@echo build complete
 
-
 clean:
-	-rm oled
+	@rm oled $(OBJS)
 
-app0:oled.c
-	$(CC) oled.c -o oled -O0 -g3 
+
+oled:$(OBJS)
+	$(CC) $(OBJS) -o $@ -O0 -g3 -I./
+
+
+$(OBJS):%.o:%.c
+	$(CC) $(CFLAGS) -c $< -o $@
